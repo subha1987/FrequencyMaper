@@ -1,4 +1,4 @@
 <resources>
     <string name="app_name">FrequencyMaper</string>
-    <string name="ivMic">Speake</string>
+    <string name="ivMic">Tap to Speak</string>
 </resources>
