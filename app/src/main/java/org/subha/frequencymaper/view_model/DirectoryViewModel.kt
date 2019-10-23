@@ -37,18 +37,21 @@ class DirectoryViewModelDomain {
      * @return index if word found in directoryList else -1
      */
     fun getIndexByWord(text: String, directory: MutableList<Directory>): Int {
-        var index = -1
+        val indexList = ArrayList<Int>()
 
         for (i in directory.indices) {
-            if (directory[i].word.toLowerCase() == text) {
+            if (directory[i].word.toLowerCase().contains(text)) {
                 val frequency = directory[i].frequency + 1
                 directory[i].frequency = frequency
                 directory[i].color = R.color.colorGreenLite
-                index = i
+                indexList.add(i)
             }
         }
 
-        return index
+        if(indexList.isNotEmpty()){
+            return indexList[0]
+        }
+        return -1
     }
 
 }
@@ -71,7 +74,7 @@ class DirectoryViewModel(val iDirectoryView: IDirectoryView, val activity: Activ
                 if (resultCode == Activity.RESULT_OK && null != data) {
                     val result = data
                         .getStringArrayListExtra(RecognizerIntent.EXTRA_RESULTS)
-                    if (result != null && result.isNotEmpty()) {
+                    if (result?.isNotEmpty() == true) {
                         processWord(word = result[0])
                     }
                 }
@@ -83,13 +86,13 @@ class DirectoryViewModel(val iDirectoryView: IDirectoryView, val activity: Activ
         domain.refreshDirectorySelection(directory)
         val index = domain.getIndexByWord(word, directory)
 
-
         if (index != -1) {
             emmitDirectList(index)
         } else {
             emmitDirectList(0)
             showMessage("No match found")
         }
+
     }
 
     fun onStart() {
