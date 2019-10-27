@@ -1,4 +1,8 @@
 <resources>
-    <string name="app_name">FrequencyMaper</string>
+    <string name="app_name">Frequency Mapper</string>
     <string name="ivMic">Tap to Speak</string>
+
+    <string name="tvWordLabel">Word</string>
+    <string name="tvFrequencyLabel">Frequency</string>
+
 </resources>

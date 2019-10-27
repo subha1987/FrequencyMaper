@@ -5,6 +5,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.LinearLayout
 import android.widget.TextView
+import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.recyclerview.widget.RecyclerView
 import org.subha.frequencymaper.R
 import org.subha.frequencymaper.view_model.Directory
@@ -35,8 +36,8 @@ class DirectoryAdapter :
     override fun onBindViewHolder(holder: DirectoryAdapterViewHolder, position: Int) {
         val directory = directoryList[position]
         holder.apply {
-            tvWord.text = "Word: " + directory.word
-            tvFrequency.text = "Frequency: " + directory.frequency.toString()
+            tvWord.text = directory.word
+            tvFrequency.text = directory.frequency.toString()
             rlParent.setBackgroundResource(directory.color)
         }
     }
@@ -44,7 +45,7 @@ class DirectoryAdapter :
     class DirectoryAdapterViewHolder(view: View) : RecyclerView.ViewHolder(view) {
         val tvWord = view.findViewById<TextView>(R.id.tvWord)
         val tvFrequency = view.findViewById<TextView>(R.id.tvFrequency)
-        val rlParent = view.findViewById<LinearLayout>(R.id.rlParent)
+        val rlParent = view.findViewById<ConstraintLayout>(R.id.rlParent)
     }
 
 }
