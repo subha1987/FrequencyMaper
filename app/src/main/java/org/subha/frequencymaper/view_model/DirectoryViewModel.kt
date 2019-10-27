@@ -20,7 +20,7 @@ class DirectoryViewModelDomain {
 
 
     fun refreshDirectorySelection(directoryList: MutableList<Directory>) {
-        directoryList?.forEach { directory ->
+        directoryList.forEach { directory ->
             directory.color = android.R.color.transparent
         }
     }
@@ -33,25 +33,53 @@ class DirectoryViewModelDomain {
     }
 
     /**
-     * search the list by word
-     * @return index if word found in directoryList else -1
+     * search the list by word passed to it
+     * @return list of index of list found matching word else empty list
      */
-    fun getIndexByWord(text: String, directory: MutableList<Directory>): Int {
+    fun getIndexListByWord(text: String, directorys: MutableList<Directory>): List<Int> {
         val indexList = ArrayList<Int>()
 
-        for (i in directory.indices) {
-            if (directory[i].word.toLowerCase().contains(text)) {
-                val frequency = directory[i].frequency + 1
-                directory[i].frequency = frequency
-                directory[i].color = R.color.colorGreenLite
+        for (i in directorys.indices) {
+            if (directorys[i].word.toLowerCase().contains(text)) {
                 indexList.add(i)
             }
         }
 
-        if(indexList.isNotEmpty()){
-            return indexList[0]
+        return indexList
+
+    }
+
+    /**
+     * make a list item highlighted by changing color to colorGreenLite
+     * @return Directory if passed valid index number else null
+     */
+    fun highlightItemByIndex(index: Int, directoryList: MutableList<Directory>): Directory? {
+
+        if (index >= 0 && index < directoryList.size) {
+            val directory = directoryList[index]
+            directory.color = R.color.colorGreenLite
+            return directory
         }
-        return -1
+
+        return null
+
+    }
+
+
+    /**
+     * increment frequency count by 1
+     * @return Directory if passed valid index number else null
+     */
+    fun incrementFrequencyCount(index: Int, directoryList: MutableList<Directory>): Directory? {
+
+        if (index >= 0 && index < directoryList.size) {
+            val directory = directoryList[index]
+            directory.frequency = directory.frequency + 1
+            return directory
+        }
+
+        return null
+
     }
 
 }
@@ -83,11 +111,18 @@ class DirectoryViewModel(val iDirectoryView: IDirectoryView, val activity: Activ
     }
 
     private fun processWord(word: String) {
-        domain.refreshDirectorySelection(directory)
-        val index = domain.getIndexByWord(word, directory)
+        domain.refreshDirectorySelection(directory) // making all item unselected
 
-        if (index != -1) {
-            emmitDirectList(index)
+        val indexList = domain.getIndexListByWord(word, directory)
+
+        indexList.forEach {
+            index ->
+            domain.highlightItemByIndex(index,directory)
+            domain.incrementFrequencyCount(index,directory)
+        }
+
+        if (indexList.isNotEmpty()) {
+            emmitDirectList(indexList[0]) // scroll to indexList first position
         } else {
             emmitDirectList(0)
             showMessage("No match found")
